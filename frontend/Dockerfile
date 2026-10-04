@@ -13,4 +13,4 @@ COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 EXPOSE 80
 
-CMD ["/bin/sh", "-c", "BACKEND=${BACKEND_URL:-http://backend:8000} envsubst '${PORT} ${BACKEND}' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+CMD ["/bin/sh", "-c", "export PORT=${PORT:-80} && export BACKEND=${BACKEND_URL:-http://backend:8000} && envsubst '$PORT $BACKEND' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
