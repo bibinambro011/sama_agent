@@ -196,6 +196,9 @@ class ContentPack(BaseModel):
     pillar_balance: PillarBalance
 
 
+# tone and banned phrase results are added at the API layer, not in the LLM schema
+
+
 # ── Launch Planner ────────────────────────────────────────────────────────────
 
 class LaunchDay(BaseModel):
