@@ -3,7 +3,7 @@ from typing import TypedDict, Any
 from openai import OpenAI
 from langgraph.graph import StateGraph, END
 from config import OPENAI_MODEL
-from knowledge_loader import load
+from knowledge_loader import load, build_context_block
 from schemas import CollectionPlan
 from tools.guardrails import check_guardrails
 from memory.db import get_recent_style_memory
@@ -29,6 +29,7 @@ def identify_and_generate(state: PlannerState) -> PlannerState:
         "brand_identity.md", "collection_types.md", "layer_formats.md",
         "business_strategy.md", "customer_psychology.md",
     )
+    context = build_context_block(state["user_input"])
     style_memory = get_recent_style_memory("collection", 3)
     memory_block = ""
     if style_memory:
@@ -38,7 +39,9 @@ def identify_and_generate(state: PlannerState) -> PlannerState:
 
     system = f"""You are SAMA's collection planning expert. Think like a talented boutique designer, Instagram strategist, merchandiser, and practical small-business consultant.
 {_feedback_block(state.get('feedback'))}
-{knowledge}{memory_block}
+{knowledge}
+{context}{context}
+{memory_block}
 
 Generate a complete collection plan. If information is missing, make reasonable assumptions and list them clearly.
 

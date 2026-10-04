@@ -3,7 +3,7 @@ from typing import TypedDict, Any
 from openai import OpenAI
 from langgraph.graph import StateGraph, END
 from config import OPENAI_MODEL
-from knowledge_loader import load
+from knowledge_loader import load, build_context_block
 from schemas import LaunchPlan
 from tools.guardrails import check_guardrails
 
@@ -25,9 +25,11 @@ class LaunchState(TypedDict):
 
 def plan_launch(state: LaunchState) -> LaunchState:
     knowledge = load("business_strategy.md", "content_strategy.md", "brand_identity.md")
+    context = build_context_block(state["user_input"])
     system = f"""You are SAMA's launch planning expert. Create a day-by-day launch timeline from T-21 to T+7.
 {_feedback_block(state.get('feedback'))}
 {knowledge}
+{context}
 
 Scale the timeline to the collection size. Assign specific content items to each day.
 Phases: Pre-launch → Teaser → Preview → Launch → Post-launch

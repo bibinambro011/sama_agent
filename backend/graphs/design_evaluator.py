@@ -3,7 +3,7 @@ from typing import TypedDict, Any
 from openai import OpenAI
 from langgraph.graph import StateGraph, END
 from config import OPENAI_MODEL
-from knowledge_loader import load
+from knowledge_loader import load, build_context_block
 from schemas import DesignEvaluation
 from tools.guardrails import check_guardrails
 
@@ -26,9 +26,11 @@ class EvaluatorState(TypedDict):
 
 def evaluate_design(state: EvaluatorState) -> EvaluatorState:
     knowledge = load("brand_identity.md", "evaluation_system.md", "customer_psychology.md")
+    context = build_context_block(state["user_input"] or "")
     system = f"""You are SAMA's design evaluation expert. Evaluate honestly and constructively.
 {_feedback_block(state.get('feedback'))}
 {knowledge}
+{context}
 
 Never answer with just "beautiful". Always return what works, what doesn't, what to change.
 

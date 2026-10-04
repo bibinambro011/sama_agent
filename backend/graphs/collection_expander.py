@@ -3,7 +3,7 @@ from typing import TypedDict, Any
 from openai import OpenAI
 from langgraph.graph import StateGraph, END
 from config import OPENAI_MODEL
-from knowledge_loader import load
+from knowledge_loader import load, build_context_block
 from schemas import ExpandedCollection
 from tools.guardrails import check_guardrails
 
@@ -26,9 +26,11 @@ class ExpanderState(TypedDict):
 
 def expand_collection(state: ExpanderState) -> ExpanderState:
     knowledge = load("brand_identity.md", "layer_formats.md", "content_strategy.md", "business_strategy.md")
+    context = build_context_block(state["user_input"])
     system = f"""You are SAMA's collection expansion expert. Take one garment and expand it into a full mini collection.
 {_feedback_block(state.get('feedback'))}
 {knowledge}
+{context}
 
 Respond with JSON only. Every array item MUST be an object, never a plain string:
 {{

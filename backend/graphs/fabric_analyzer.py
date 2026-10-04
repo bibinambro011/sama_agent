@@ -3,7 +3,7 @@ from typing import TypedDict, Any
 from openai import OpenAI
 from langgraph.graph import StateGraph, END
 from config import OPENAI_MODEL
-from knowledge_loader import load
+from knowledge_loader import load, build_context_block
 from schemas import FabricAnalysis
 from tools.guardrails import check_guardrails
 
@@ -26,9 +26,11 @@ class FabricState(TypedDict):
 
 def analyze_fabric(state: FabricState) -> FabricState:
     knowledge = load("brand_identity.md", "collection_types.md", "customer_psychology.md")
+    context = build_context_block(state["user_input"] or "")
     system = f"""You are SAMA's fabric analysis expert. Analyze the fabric and suggest garment concepts.
 {_feedback_block(state.get('feedback'))}
 {knowledge}
+{context}
 
 Respond with JSON only. garment_concepts MUST contain exactly 5 objects — do not return fewer:
 {{

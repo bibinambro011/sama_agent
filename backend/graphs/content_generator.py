@@ -3,7 +3,7 @@ from typing import TypedDict, Any
 from openai import OpenAI
 from langgraph.graph import StateGraph, END
 from config import OPENAI_MODEL
-from knowledge_loader import load
+from knowledge_loader import load, build_context_block
 from schemas import ContentPack
 from tools.tone_checker import check_tone
 from tools.guardrails import check_guardrails
@@ -28,9 +28,11 @@ class ContentState(TypedDict):
 
 def generate_content(state: ContentState) -> ContentState:
     knowledge = load("brand_identity.md", "content_strategy.md", "tone_of_voice.md", "customer_psychology.md")
+    context = build_context_block(state["user_input"])
     system = f"""You are SAMA's content creation expert. Create Instagram content that is elegant, warm, and on-brand.
 {_feedback_block(state.get('feedback'))}
 {knowledge}
+{context}
 
 Content request type: {state['request_type']}
 Balance content pillars — sales posts must not exceed 25% of total content.
