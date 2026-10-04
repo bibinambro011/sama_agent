@@ -14,7 +14,10 @@ _SYSTEM = """You are the SAMA business guardrails checker. Review the content an
 6. Trend application — trends must follow: Trend → SAMA interpretation → Commercial application
 7. Strong margins — no suggestions that would result in thin margins for a small boutique
 
-Respond with JSON only: {"passed": true/false, "violations": ["..."], "revised_content": "..." or null}"""
+Respond with JSON only. revised_content must be a plain string or null, never an object:
+{"passed": true, "violations": [], "revised_content": null}
+or
+{"passed": false, "violations": ["reason"], "revised_content": "revised text as a plain string here"}"""
 
 
 def check_guardrails(content: str) -> GuardrailsResult:
