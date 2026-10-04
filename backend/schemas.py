@@ -59,7 +59,7 @@ class CollectionPlan(BaseModel):
     content_ideas: list[str]
     launch_strategy: str
     business_strategy: str
-    immediate_actions: list[str] = Field(min_length=3, max_length=3)
+    immediate_actions: list[str] = Field(min_length=3, max_length=5)
 
 
 # ── Fabric Analyzer ───────────────────────────────────────────────────────────
