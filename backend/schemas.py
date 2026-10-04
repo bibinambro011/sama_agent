@@ -260,3 +260,49 @@ class ToneResult(BaseModel):
     passed: bool
     flags: list[str]
     revised_text: Optional[str]
+
+
+# ── Business Profile ──────────────────────────────────────────────────────────
+
+class BusinessProfile(BaseModel):
+    location_climate: str = ""
+    categories_made: list[str] = []
+    categories_not_made: list[str] = []
+    fabric_families_used: list[str] = []
+    fabrics_to_avoid: list[str] = []
+    price_range: dict[str, str] = {}
+    stitching_lead_time_days: int = 21
+    monthly_capacity: str = ""
+    size_range: str = ""
+    custom_measurements: bool = True
+    sales_channels: list[str] = []
+    confirmed_facts: list[str] = []
+    never_claim: list[str] = []
+    caption_languages: list[str] = ["English"]
+
+
+# ── Rules ─────────────────────────────────────────────────────────────────────
+
+class Rule(BaseModel):
+    id: Optional[int] = None
+    scope: Literal["global", "collection"]
+    occasion: Optional[str] = None
+    rule_text: str
+    created_at: Optional[str] = None
+    active: bool = True
+
+
+# ── Banned Phrase ─────────────────────────────────────────────────────────────
+
+class BannedPhrase(BaseModel):
+    id: Optional[int] = None
+    phrase: str
+    active: bool = True
+
+
+# ── Validator Result ──────────────────────────────────────────────────────────
+
+class ValidatorResult(BaseModel):
+    passed: bool
+    banned_phrase_hits: list[str] = []
+    warnings: list[str] = []

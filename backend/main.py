@@ -12,8 +12,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from memory.db import init_db, save_item, get_items, get_item, update_feedback, delete_item, save_style_memory
-from schemas import PricingInput
+from memory.db import (
+    init_db, save_item, get_items, get_item, update_feedback, delete_item, save_style_memory,
+    get_business_profile, save_business_profile,
+    add_rule, get_rules, get_all_rules, toggle_rule, delete_rule,
+    get_banned_phrases, add_banned_phrase, toggle_banned_phrase, delete_banned_phrase,
+    get_generation_logs,
+)
+from schemas import PricingInput, BusinessProfile, Rule, BannedPhrase
 from tools.pricing import calculate_price
 from graphs.router import route
 import graphs.collection_planner as collection_planner
@@ -167,3 +173,74 @@ def export_csv(item_id: int):
         media_type="text/csv",
         headers={"Content-Disposition": f"attachment; filename=launch_plan_{item_id}.csv"},
     )
+
+
+# ── Business Profile ──────────────────────────────────────────────────────────────
+
+@app.get("/api/profile")
+def get_profile() -> dict:
+    profile = get_business_profile()
+    return profile or {}
+
+
+@app.post("/api/profile")
+def upsert_profile(profile: BusinessProfile) -> dict:
+    save_business_profile(profile.model_dump())
+    return {"message": "Profile saved"}
+
+
+# ── Rules ───────────────────────────────────────────────────────────────────────
+
+@app.get("/api/rules")
+def list_rules(occasion: str | None = None) -> list[dict]:
+    return get_all_rules() if occasion is None else get_rules(occasion)
+
+
+@app.post("/api/rules")
+def create_rule(rule: Rule) -> dict:
+    rule_id = add_rule(rule.scope, rule.rule_text, rule.occasion)
+    return {"id": rule_id, "message": "Rule saved"}
+
+
+@app.patch("/api/rules/{rule_id}")
+def patch_rule(rule_id: int, active: bool) -> dict:
+    toggle_rule(rule_id, active)
+    return {"message": "Updated"}
+
+
+@app.delete("/api/rules/{rule_id}")
+def remove_rule(rule_id: int) -> dict:
+    delete_rule(rule_id)
+    return {"message": "Deleted"}
+
+
+# ── Banned Phrases ─────────────────────────────────────────────────────────────
+
+@app.get("/api/banned-phrases")
+def list_banned_phrases() -> list[dict]:
+    return get_banned_phrases(active_only=False)
+
+
+@app.post("/api/banned-phrases")
+def create_banned_phrase(bp: BannedPhrase) -> dict:
+    phrase_id = add_banned_phrase(bp.phrase)
+    return {"id": phrase_id, "message": "Added"}
+
+
+@app.patch("/api/banned-phrases/{phrase_id}")
+def patch_banned_phrase(phrase_id: int, active: bool) -> dict:
+    toggle_banned_phrase(phrase_id, active)
+    return {"message": "Updated"}
+
+
+@app.delete("/api/banned-phrases/{phrase_id}")
+def remove_banned_phrase(phrase_id: int) -> dict:
+    delete_banned_phrase(phrase_id)
+    return {"message": "Deleted"}
+
+
+# ── Generation Logs ─────────────────────────────────────────────────────────────
+
+@app.get("/api/logs")
+def list_logs(limit: int = 50) -> list[dict]:
+    return get_generation_logs(limit)
