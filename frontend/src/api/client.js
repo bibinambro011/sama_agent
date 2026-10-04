@@ -2,8 +2,8 @@ import axios from 'axios'
 
 const api = axios.create({ baseURL: '/api' })
 
-export const chat = (message, image_b64 = null, request_type = null, feedback = null) =>
-  api.post('/chat', { message, image_b64, request_type, feedback }).then(r => r.data)
+export const chat = (message, image_b64 = null, request_type = null, feedback = null, brief_id = null) =>
+  api.post('/chat', { message, image_b64, request_type, feedback, brief_id }).then(r => r.data)
 
 export const calcPricing = (data) =>
   api.post('/pricing', data).then(r => r.data)
@@ -44,6 +44,10 @@ export const listBannedPhrases = () => api.get('/banned-phrases').then(r => r.da
 export const addBannedPhrase = (phrase) => api.post('/banned-phrases', { phrase }).then(r => r.data)
 export const toggleBannedPhrase = (id, active) => api.patch(`/banned-phrases/${id}`, null, { params: { active } }).then(r => r.data)
 export const deleteBannedPhrase = (id) => api.delete(`/banned-phrases/${id}`).then(r => r.data)
+
+// ── Collection Brief ──────────────────────────────────────────────────────────────
+export const generateBrief = (message, feedback = null) => api.post('/brief', { message, feedback }).then(r => r.data)
+export const approveBrief = (id) => api.post(`/brief/${id}/approve`).then(r => r.data)
 
 // ── Logs ─────────────────────────────────────────────────────────────────────────────
 export const getLogs = (limit = 50) => api.get('/logs', { params: { limit } }).then(r => r.data)

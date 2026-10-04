@@ -18,8 +18,10 @@ from memory.db import (
     add_rule, get_rules, get_all_rules, toggle_rule, delete_rule,
     get_banned_phrases, add_banned_phrase, toggle_banned_phrase, delete_banned_phrase,
     get_generation_logs,
+    save_brief, get_brief, approve_brief, get_latest_approved_brief,
 )
-from schemas import PricingInput, BusinessProfile, Rule, BannedPhrase
+from schemas import PricingInput, BusinessProfile, Rule, BannedPhrase, CollectionBrief
+from graphs.collection_brief import generate_brief
 from tools.pricing import calculate_price
 from graphs.router import route
 import graphs.collection_planner as collection_planner
@@ -70,6 +72,7 @@ class ChatRequest(BaseModel):
     image_b64: str | None = None
     request_type: str | None = None
     feedback: str | None = None
+    brief_id: int | None = None  # optional: use an approved brief for content generation
 
 
 @app.post("/api/chat")
@@ -88,7 +91,11 @@ def chat(req: ChatRequest) -> dict[str, Any]:
         elif intent == "collection_expander":
             result = collection_expander.run(req.message, image_b64, req.feedback)
         elif intent == "content_generator":
-            result = content_generator.run(req.message, req.request_type or "full content pack", req.feedback)
+            brief = None
+            if req.brief_id:
+                brief_row = get_brief(req.brief_id)
+                brief = brief_row["brief"] if brief_row else None
+            result = content_generator.run(req.message, req.request_type or "full content pack", req.feedback, brief)
         elif intent == "launch_planner":
             result = launch_planner.run(req.message, req.feedback)
         elif intent == "pricing":
@@ -244,3 +251,34 @@ def remove_banned_phrase(phrase_id: int) -> dict:
 @app.get("/api/logs")
 def list_logs(limit: int = 50) -> list[dict]:
     return get_generation_logs(limit)
+
+
+# ── Collection Brief ────────────────────────────────────────────────────────────
+
+class BriefRequest(BaseModel):
+    message: str
+    feedback: str | None = None
+
+
+@app.post("/api/brief")
+def create_brief(req: BriefRequest) -> dict:
+    try:
+        brief = generate_brief(req.message, req.feedback)
+        brief_id = save_brief(brief.occasion, brief.model_dump())
+        return {"id": brief_id, "brief": brief.model_dump()}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/brief/{brief_id}")
+def fetch_brief(brief_id: int) -> dict:
+    row = get_brief(brief_id)
+    if not row:
+        raise HTTPException(status_code=404, detail="Brief not found")
+    return row
+
+
+@app.post("/api/brief/{brief_id}/approve")
+def approve_brief_endpoint(brief_id: int) -> dict:
+    approve_brief(brief_id)
+    return {"message": "Brief approved"}

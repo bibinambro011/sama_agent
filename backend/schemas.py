@@ -199,6 +199,35 @@ class ContentPack(BaseModel):
 # tone and banned phrase results are added at the API layer, not in the LLM schema
 
 
+# ── Collection Brief ────────────────────────────────────────────────────────────
+
+class HeroGarment(BaseModel):
+    name: str
+    garment_type: str
+    fabric: str
+    colourway: str
+    neckline: str
+    sleeve: str
+    length: str
+    signature_detail: str
+    production_complexity: Literal["Low", "Medium", "High"]
+    price_tag: Literal["Entry", "Hero", "Premium"]
+
+
+class CollectionBrief(BaseModel):
+    occasion: str
+    target_customer: str
+    price_positioning: str
+    assumptions: list[str]
+    palette: list[str] = Field(min_length=4, max_length=5)
+    fabric_direction: str
+    hero_garments: list[HeroGarment] = Field(min_length=3, max_length=3)
+    kids_piece: str
+    signature_details: list[str] = Field(min_length=2, max_length=2)
+    story_angle: str
+    fill_these_in: list[str]
+
+
 # ── Launch Planner ────────────────────────────────────────────────────────────
 
 class LaunchDay(BaseModel):

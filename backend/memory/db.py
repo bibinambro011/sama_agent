@@ -70,6 +70,13 @@ def init_db() -> None:
                 latency_ms INTEGER,
                 created_at TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS collection_briefs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                occasion TEXT NOT NULL,
+                brief TEXT NOT NULL,
+                approved INTEGER NOT NULL DEFAULT 0,
+                created_at TEXT NOT NULL
+            );
         """)
         _seed_banned_phrases(conn)
 
@@ -267,3 +274,43 @@ def get_generation_logs(limit: int = 50) -> list[dict]:
             "SELECT * FROM generation_log ORDER BY created_at DESC LIMIT ?", (limit,)
         ).fetchall()
     return [dict(r) for r in rows]
+
+
+# ── Collection Briefs ─────────────────────────────────────────────────────────────
+
+def save_brief(occasion: str, brief: dict) -> int:
+    with get_conn() as conn:
+        cur = conn.execute(
+            "INSERT INTO collection_briefs (occasion, brief, created_at) VALUES (?,?,?)",
+            (occasion, json.dumps(brief), datetime.utcnow().isoformat()),
+        )
+        return cur.lastrowid
+
+
+def get_brief(brief_id: int) -> dict | None:
+    with get_conn() as conn:
+        row = conn.execute("SELECT * FROM collection_briefs WHERE id=?", (brief_id,)).fetchone()
+    if not row:
+        return None
+    d = dict(row)
+    d["brief"] = json.loads(d["brief"])
+    return d
+
+
+def approve_brief(brief_id: int) -> None:
+    with get_conn() as conn:
+        conn.execute("UPDATE collection_briefs SET approved=1 WHERE id=?", (brief_id,))
+
+
+def get_latest_approved_brief(occasion: str) -> dict | None:
+    with get_conn() as conn:
+        row = conn.execute(
+            "SELECT * FROM collection_briefs WHERE lower(occasion)=lower(?) AND approved=1 "
+            "ORDER BY created_at DESC LIMIT 1",
+            (occasion,),
+        ).fetchone()
+    if not row:
+        return None
+    d = dict(row)
+    d["brief"] = json.loads(d["brief"])
+    return d
