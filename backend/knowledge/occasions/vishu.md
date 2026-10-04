@@ -27,7 +27,6 @@ Vishu is the Kerala Hindu New Year, celebrated in April. The central ritual is t
 
 ## What to Avoid
 - Do not reference Christmas or Diwali
-- Do not suggest sarees or blouses
 - Do not confuse with Onam — Vishu is April, Onam is August/September
 - Vishu is more understated than Onam — avoid over-the-top festive suggestions
 

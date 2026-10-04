@@ -25,7 +25,6 @@ Onam is Kerala's biggest harvest festival, celebrated over 10 days (Atham to Thi
 - Avoid: heavy velvet, thick brocade, synthetic fabrics that trap heat
 
 ## What to Avoid
-- Do not suggest sarees, blouses, or traditional set mundus — SAMA does not make these
 - Do not suggest heavy embellishment — Onam aesthetic is clean and elegant, not heavily embroidered
 - Do not invent facts about handloom unless confirmed by the owner
 - Avoid Diwali or North Indian festival references (no diyas, rangoli, or Diwali-specific motifs)

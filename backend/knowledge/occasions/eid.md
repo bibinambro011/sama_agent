@@ -28,7 +28,6 @@ Eid al-Fitr (end of Ramadan) and Eid al-Adha are major celebrations for Muslim c
 
 ## What to Avoid
 - Do not reference other festivals (Onam, Christmas, Diwali)
-- Do not suggest sarees or blouses
 - Ensure all suggested garments are modest (sleeve length, neckline, hem length)
 - Do not invent facts about handloom or certifications
 

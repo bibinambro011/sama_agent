@@ -27,7 +27,6 @@ Christmas in Kerala (and among the Christian community across South India) is a 
 
 ## What to Avoid
 - Do not reference Onam, Diwali, or other festivals
-- Do not suggest sarees or blouses
 - Avoid overly casual fabrics (plain cotton, linen) — Christmas calls for a slightly elevated feel
 - Do not invent facts about sustainability or handloom
 

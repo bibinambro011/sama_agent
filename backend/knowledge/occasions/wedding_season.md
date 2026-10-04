@@ -28,8 +28,7 @@ Wedding season in Kerala typically peaks Octoberâ€“February and again in Aprilâ€
 - Avoid: fabrics that crease badly, fabrics that are too stiff
 
 ## What to Avoid
-- Do not suggest bridal wear, heavy lehengas, or full traditional sets
-- Do not suggest sarees or blouses
+- Do not suggest bridal wear or heavy lehengas
 - Do not suggest garments that are too casual for a wedding
 - Do not invent facts about fabric sourcing
 

@@ -26,7 +26,6 @@ Diwali is the festival of lights, celebrated primarily by Hindu communities. In 
 
 ## What to Avoid
 - Do not reference Onam or Christmas
-- Do not suggest sarees or blouses
 - Do not use Diwali-specific North Indian references (diyas, rangoli) as design motifs unless the owner confirms
 - Do not invent facts about handloom or sustainability
 

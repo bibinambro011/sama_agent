@@ -73,10 +73,8 @@ def build_profile_block() -> str:
         return (
             "\n\n## Business Profile\n"
             "No business profile configured yet. "
-            "Assume: warm and humid climate (Kerala), "
-            "makes kurti sets, co-ords, dresses, tops, bottoms, kids' wear. "
-            "Does NOT make sarees, blouses, Anarkalis, or bridal wear. "
-            "State all assumptions explicitly in output.\n"
+            "Make no assumptions about what SAMA does or does not make. "
+            "State any assumptions you make explicitly in the output.\n"
         )
     lines = ["", "## Business Profile"]
     if profile.get("location_climate"):
