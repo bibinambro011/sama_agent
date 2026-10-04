@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #fdf8f3;
+    color: #2d2d2d;
+  }
+  h1, h2, h3 {
+    font-family: 'Cormorant Garamond', serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-sama-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-sama-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply border border-sama-300 text-sama-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-sama-50 transition-colors;
+  }
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-sama-100 p-5;
+  }
+  .input {
+    @apply w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-sama-300 bg-white;
+  }
+  .label {
+    @apply block text-xs font-medium text-gray-500 mb-1 uppercase tracking-wide;
+  }
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+  .badge-low { @apply badge bg-green-100 text-green-700; }
+  .badge-medium { @apply badge bg-yellow-100 text-yellow-700; }
+  .badge-high { @apply badge bg-red-100 text-red-700; }
+  .score-bar {
+    @apply h-2 rounded-full bg-sama-200;
+  }
+  .score-fill {
+    @apply h-2 rounded-full bg-sama-500 transition-all;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #fdf8f3; }
+::-webkit-scrollbar-thumb { background: #e8be8e; border-radius: 3px; }

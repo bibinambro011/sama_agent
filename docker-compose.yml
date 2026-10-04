@@ -1,0 +1,27 @@
+services:
+  backend:
+    build: ./backend
+    container_name: sama_backend
+    env_file: .env
+    volumes:
+      - sama_db:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  frontend:
+    build: ./frontend
+    container_name: sama_frontend
+    ports:
+      - "3000:80"
+    environment:
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  sama_db:
